@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{757689E9-AB7E-408B-9884-49791B842CD0}</ProjectGuid>
-    <RootNamespace>My2linearprogram</RootNamespace>
+    <ProjectGuid>{C0DEEFB6-66BF-46E8-9961-5C1865C4080B}</ProjectGuid>
+    <RootNamespace>My2conditionalsloops1</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -77,11 +77,6 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
-    <Link>
-      <MinimumRequiredVersion>
-      </MinimumRequiredVersion>
-      <SubSystem>Console</SubSystem>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

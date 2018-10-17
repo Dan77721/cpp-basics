@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-
+#include <iomanip>
 using namespace std;
 
 int main()
@@ -19,10 +19,15 @@ int main()
 	cin >> Xl;
 	cout << "Enter dX: ";
 	cin >> dX;
+	cout << "-------------------------------------" << endl;
+	cout << "|        X        |        F        |" << endl;
+	cout << "-------------------------------------" << endl;
 	if ((int(a) | int(b) & (int(a) | int(c)))) expression = 1;
 	else expression = 0;
+	cout.precision(3);
+	cout << fixed;
 	for (X = Xf; X <= Xl; X += dX) {
-		cout << "X = " << X << " F = ";
+		cout  << "|" << setw(12) << X ;
 		if (X < 0 && b != 0) f = a * X * X + b;
 		else if (X > 0 && b == 0) {
 			if (X - c != 0) f = (X - a) / (X - c);
@@ -36,8 +41,12 @@ int main()
 			cout << "ERROR" << endl;
 			break;
 		}
-		if (expression == 1) cout << f << endl;
-		else cout << int(f) << endl;
+		cout << "     |" ;
+		cout.width(12);
+		if (expression == 1) cout << f ;
+		else cout << int(f) ;
 	}
+	cout << "     |" << endl;
+	cout << "-------------------------------------";
 	return 0;
 }
