@@ -30,14 +30,14 @@ int main()
 		cout << "\nInvalid x2. Must be: x2 >= x1.\n";
 		return 2;
 	}
-	else {
+	
 		cout << string(75, '-') << endl;
 		cout << "|         x         ";
 		cout << "|   ln(x+1/x-1)mine ";
 		cout << "|   ln(x+1/x-1)cmath ";
 		cout << "| iterations |\n";
 		cout << string(75, '-') << endl;
-	}
+	
 	cout << fixed;
 	cout.precision(6);
 
