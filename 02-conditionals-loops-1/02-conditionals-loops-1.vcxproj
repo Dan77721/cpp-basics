@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{C0DEEFB6-66BF-46E8-9961-5C1865C4080B}</ProjectGuid>
-    <RootNamespace>My2conditionalsloops1</RootNamespace>
+    <ProjectGuid>{DAECFBA3-02E6-480C-A7A2-47243FC9C1F7}</ProjectGuid>
+    <RootNamespace>My02conditionalsloops1</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
