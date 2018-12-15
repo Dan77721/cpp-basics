@@ -1,39 +1,36 @@
 #include <iostream>
-#include <string>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
-int main() {
-	string sentences;
-	ifstream fin("file.txt");
+int main()
+{
+    string file_name = "text.txt";
+    ifstream fin(file_name);
+    if (!fin.is_open())
+    {
+        cout << "Can't open file: " << file_name << ".\n";
+        return 1;
+    }
 
-	if (!fin.is_open()) {
-		cout << "can't open file!" << endl;
-		return 1;
-	}
+    char buf;
+    string sentences;
+    int num_sentences = 0;
+    while ((fin.get(buf)) && (num_sentences < 3))
+    {
+        sentences += buf;
+        if ((buf == '.') || (buf == '?') || (buf == '!'))
+            num_sentences++;
+    }
 
-	int number = 0;
-	char buf;
-	while ((!fin.eof()) && (number < 3)) {
-		fin.get(buf);
-		sentences += buf;
-		if ((buf == '.') || (buf == '?') || (buf == '!'))
-			number++;
-	}
+    cout << "Three sentences:\n" << sentences << endl;
 
-	cout << "Sentences: " << endl;
-	for (int i = 0; i < static_cast<int>(sentences.length()); i++)
-	{
-		cout << sentences[i];
-	}
+    cout << "\nInverted sentences:\n";
+    for (int i = sentences.length() - 1; i >= 0; i--)
+        cout << sentences[i];
+    cout << endl;
 
-	cout << endl << endl << "Inverted sentences: " << endl;
-	for (int i = sentences.length() - 1; i >= 0; i--)
-	{
-		cout << sentences[i];
-	}
-	cout << endl;
-	fin.close();
-	return 0;
+    fin.close();
+    return 0;
 }

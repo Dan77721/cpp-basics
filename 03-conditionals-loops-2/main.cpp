@@ -1,76 +1,60 @@
 #include <iostream>
-#include <cmath>
 #include <iomanip>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
 int main()
 {
-	double x1, x2, dx;
-	double ln1, ln2;
-	double eps = 1e-15;
-	const int kMaxIter = 100;
-	cout << "ln(x+1/x-1),  x > 1" << endl;
-	cout << "Enter x1: ";
-	cin >> x1;
-	cout << "Enter x2: ";
-	cin >> x2;
-	cout << "Enter dx: ";
-	cin >> dx;
-	if (x1 <= 1){
-		cout << "error";
-		return 2;
-	}
-	if (dx <= 0) {
-		cout << "\nInvalid dx. Must be: dx > 0.\n";
-		return 2;
-	}
-	if (x1 > x2) {
-		cout << "\nInvalid x2. Must be: x2 >= x1.\n";
-		return 2;
-	}
-	
-		cout << string(75, '-') << endl;
-		cout << "|         x         ";
-		cout << "|   ln(x+1/x-1)mine ";
-		cout << "|   ln(x+1/x-1)cmath ";
-		cout << "| iterations |\n";
-		cout << string(75, '-') << endl;
-	
-	cout << fixed;
-	cout.precision(6);
+    const int kMaxIters = 10000;
 
-	int iter;
-	for (double x = x1; x <= x2; x += dx)
-	{
-		cout << "|" << setw(15) << x;
-	    ln2 = 0;
-		iter = 0;
-		while (iter <= kMaxIter)
-		{
-			ln1 = 1.0 / ((2 * iter + 1) * (pow(x, 2 * iter + 1))) + ln2;
+    double xn, xk, dx, eps;
+    cout << "|x| > 1\n";
+    cout << "Enter xn: ";
+    cin >> xn;
+    cout << "Enter xk >= xn: ";
+    cin >> xk;
+    cout << "Enter dx > 0: ";
+    cin >> dx;
+    cout << "Enter eps > 0: ";
+    cin >> eps;
 
-			if (abs(abs(ln1) - abs(ln2)) < eps)
-				break;
-			ln2 = ln1;
-			iter++;
-		}
+    if ((abs(xn) <= 1) || (abs(xk) <= 1) || (xk < xn) || (dx <= 0) || (eps <= 0))
+    {
+        cout << "\nWrong input data!\n";
+        return 1;
+    }
 
-		if (kMaxIter >= iter)
-		{
-			cout << "    |" << setw(14) << ln1 * 2;
-			cout << "     |" << setw(16) << log((x + 1) / (x - 1));
-			cout << "    |" << setw(7) << iter << "     |" << endl;
-		}
-		else
-		{
-			cout << "    |" << setw(14) << "MAX_ITER";
-			cout << "     |" << setw(16) << "MAX_ITER";
-			cout << "    |" << setw(7) << "  MAX_ITER" << "  |" << endl;
-		}
+    cout << endl << string(72, '-') << endl;
+    cout << "|        x        | ln((x+1)/(x-1)) ";
+    cout << "| ln((x+1)/(x-1)) |   iterations   |\n";
+    cout << "|                 |      (mine)     ";
+    cout << "|     (cmath)     |                |\n";
+    cout << string(72, '-') << endl;
 
-	}
-	cout << string(75, '-') << endl;
-	return 0;
+    cout << fixed;
+
+    for (; xn <= xk; xn += dx)
+    {
+        int n;
+        double ln = 0;
+        for (n = 0; n <= kMaxIters; n++)
+        {
+            double nth_term = 2 * (1 / ((2 * n + 1) * pow(xn, 2 * n + 1)));
+            ln += nth_term;
+            if (abs(nth_term) < eps) break;
+        }
+
+        cout << "|" << setw(13) << xn << setw(5) << "|";
+        if (n <= kMaxIters)
+            cout << setw(13) << ln << setw(5);
+        else
+            cout << " limit exceeded! ";
+        cout << "|" << setw(13) << log((xn + 1) / (xn - 1)) << setw(5);
+        cout << "|" << setw(9) << n << setw(9) << "|\n";
+    }
+    cout << string(72, '-') << endl;
+
+    return 0;
 }

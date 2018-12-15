@@ -1,29 +1,15 @@
-#include <iostream> //Input/Output 
-#include <cstdlib> //rand()
-#include <ctime> // rand()
-#include <iomanip> //std::setw()
-#include <string> //string()
+#include <iostream>
 
-using std::cout;
-using std::endl;
+using namespace std;
 
-struct MaxAndMin
+struct MinMaxIndices
 {
-	int max_el,//max element
-		min_el,//min element
-		id_max,//index of max
-		id_min;//index of min
-
+    int min_i, max_i;
 };
 
-int SumSubzeroElements(int array[], int size);
-
-int ProductBetweenMaxAndMin(int array[], int max, int min);
-
-void PrintArray(int array[], int const size);
-
-void SortArray(int array[], int const size);
-
-void GenerateArray(int array[], int const size);
-
-MaxAndMin FindMaxAndMin(int array[], int const size);
+void PrintArray(double* arr, const int kArraySize);
+bool NegativeElementExists(double* arr, const int kArraySize);
+double SumNegativeElements(double* arr, const int kArraySize);
+MinMaxIndices FindMinMaxIndices(double* arr, const int kArraySize);
+double ProductRangeElements(double* arr, int begin, int end);
+void SortArray(double* arr, const int kArraySize);

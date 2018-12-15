@@ -1,112 +1,105 @@
 #include <iostream>
-#include <cstdlib>  
-#include <ctime> 
-#include <iomanip> 
-#include <string> 
 
 using namespace std;
 
-struct MaxAndMin
+struct MinMaxIndices
 {
-	int max_el,
-		min_el,
-		id_max,
-		id_min;
-
+    int min_i, max_i;
 };
 
-int SumSubzeroElements(int array[], int size) {
-	int result = 0;
-	for (int i = 0; i < size; i++)
-	{
-		if (array[i] < 0)
-			result += array[i];
-	}
-	return result;
+void PrintArray(double* arr, const int kArraySize);
+bool NegativeElementExists(double* arr, const int kArraySize);
+double SumNegativeElements(double* arr, const int kArraySize);
+MinMaxIndices FindMinMaxIndices(double* arr, const int kArraySize);
+double ProductRangeElements(double* arr, int begin, int end);
+void SortArray(double* arr, const int kArraySize);
+
+int main()
+{
+    const int kArraySize = 10;
+    double arr[kArraySize] = { 3, -7, 1, 0.1, -.9, 8, -6, .2, -5, .4 };
+
+    cout << "Initial array:\n";
+    PrintArray(arr, kArraySize);
+    cout << endl;
+
+    cout << "\nSum of negative elements = ";
+    if (NegativeElementExists(arr, kArraySize))
+        cout << SumNegativeElements(arr, kArraySize) << endl;
+    else
+        cout << "\nNo negative elements in the array.\n";
+
+    MinMaxIndices mmi = FindMinMaxIndices(arr, kArraySize);
+    int min_index = mmi.min_i;
+    int max_index = mmi.max_i;
+    cout << "\nProduct of elements between min and max = ";
+    if (abs(min_index - max_index) > 1)
+    {
+        if (min_index < max_index)
+            cout << ProductRangeElements(arr, min_index, max_index) << endl;
+        else
+            cout << ProductRangeElements(arr, max_index, min_index) << endl;
+    }
+    else
+    {
+        cout << "\nNo elements between min and max.\n";
+    }
+
+    SortArray(arr, kArraySize);
+    cout << "\nSorted array:\n";
+    PrintArray(arr, kArraySize);
+    cout << endl;
+
+    return 0;
 }
 
-int ProductBetweenMaxAndMin(int array[], int max, int min) {
-	int result = 1;
-	if (min > max) 
-		swap(min, max);
-	for (int i = min + 1; i < max; i++)
-	{
-		result *= array[i];
-	}
-	return result;
-
+void PrintArray(double* arr, const int kArraySize)
+{
+    cout << "[";
+    for (int i = 0; i < kArraySize; i++)
+        cout << arr[i] << ((i < kArraySize - 1) ? (", ") : ("]"));
 }
 
-void PrintArray(int array[], int size) {
-	cout << string(61, '-') << endl;
-	cout << "|";
-
-	for (int i = 0; i < size; i++) {
-		cout << setw(2) << "[" << i << "]" << setw(2) << "|";
-	}
-
-	cout << "<- Index";
-	cout << endl << string(61, '-') << endl << "|";
-
-	for (int i = 0; i < size; i++) {
-		cout << setw(3) << array[i] << setw(3) << "|";
-	}
-
-	cout << "<- array[i]";
-	cout << endl;
-	cout << string(61, '-') << endl;
-	cout << endl;
+bool NegativeElementExists(double* arr, const int kArraySize)
+{
+    for (int i = 0; i < kArraySize; i++)
+        if (arr[i] < 0)
+            return 1;
+    return 0;
 }
 
-void SortArray(int array[], int size) {
-	for (int i = 0; i < size - 1; i++) {
-		for (int j = 0; j < size - i - 1; j++) {
-			if (array[j] < array[j + 1]) {
-				swap(array[j], array[j + 1]);
-			}
-		}
-	}
+double SumNegativeElements(double* arr, const int kArraySize)
+{
+    double sum = 0;
+    for (int i = 0; i < kArraySize; i++)
+        if (arr[i] < 0)
+            sum += arr[i];
+    return sum;
 }
 
-int main() {
-	int const kArraySize = 10;
-	int array[kArraySize];
-	MaxAndMin M;
+MinMaxIndices FindMinMaxIndices(double* arr, const int kArraySize)
+{
+    int min_i = 0, max_i = 0;
+    for (int i = 1; i < kArraySize; i++)
+    {
+        if ((arr[i]) > (arr[min_i])) min_i = i;
+        if ((arr[i]) < (arr[max_i])) max_i = i;
+    }
+    return MinMaxIndices{ min_i, max_i };
+}
 
-	srand((unsigned)time(NULL));
+double ProductRangeElements(double* arr, int begin, int end)
+{
+    double product = 1;
+    for (int i = begin + 1; i < end; i++)
+        product *= arr[i];
+    return product;
+}
 
-	
-	array[0] = int(pow(-1, rand() % 2))*(rand() % 20);
-	M.max_el = M.min_el = abs(array[0]);
-	M.id_min = M.id_max = 0;
-	for (int i = 1; i < kArraySize; i++) {
-		array[i] = int(pow(-1, rand() % 2))*(rand() % 20); 
-		if (abs(array[i]) < M.min_el) {
-			M.min_el = abs(array[i]);
-			M.id_min = i;
-		}
-		if (abs(array[i]) > M.max_el) {
-			M.max_el = abs(array[i]);
-			M.id_max = i;
-		}
-	}
-	cout << "Starting Array :" << endl;
-	PrintArray(array, kArraySize);
-
-	cout << "Sum of subzero elements : ";
-	cout << SumSubzeroElements(array, kArraySize);
-	cout << endl << endl;
-
-	cout << "Product between the max and min modulo elements : ";
-	if (abs(M.id_max - M.id_min) > 1)
-		cout << ProductBetweenMaxAndMin(array, M.id_max, M.id_min);
-	else
-		cout << "Error: no elements between max and min";
-	cout << endl << endl;
-
-	cout << "Sorted Array :" << endl;
-	SortArray(array, kArraySize);
-	PrintArray(array, kArraySize);
-
-	return 0;
+void SortArray(double* arr, const int kArraySize)
+{
+    for (int i = 0; i < kArraySize - 1; i++)
+        for (int j = 0; j < kArraySize - i - 1; j++)
+            if (arr[j] > arr[j + 1])
+                swap(arr[j], arr[j + 1]);
 }

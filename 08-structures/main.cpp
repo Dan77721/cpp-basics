@@ -1,113 +1,124 @@
 #include <iostream>
 #include <string>
-#include <iomanip>
-
-#define kStudents 10
-#define kMarks 5
 
 using namespace std;
 
-struct Student {
-	string full_name;
-	int group_number;
-	int marks[kMarks];
+constexpr auto kNumMarks = 5;
+
+struct Student
+{
+    string full_name, group_name;
+    int marks[kNumMarks];
 };
 
-bool isNumber(string s) {
-	bool result = true;
-	for (int i = 0; i < int(s.length()); i++)
-	{
-		if ((s[i] < '0') || (s[i] > '9')) {
-			result = false;
-			break;
-		}
-	}
-	return result;
+bool IsNumber(string number);
+void AddStudents(Student* students, const int kNumStudents);
+double* ComputeAverageMarks(Student* students, const int kNumStudents);
+void PrintStudents(Student* students, const int kNumStudents);
+void SortStudents(Student* students, const int kNumStudents);
+void PrintGoodStudents(Student* students, const int kNumStudents);
+
+int main()
+{
+    const int kNumStudents = 10;
+    Student students[kNumStudents];
+    AddStudents(students, kNumStudents);
+    cout << string(80, '-') << endl;
+
+    SortStudents(students, kNumStudents);
+    PrintStudents(students, kNumStudents);
+    cout << endl << string(80, '-') << endl;
+
+    cout << "\nStudents with an average mark of more than 4:\n";
+    PrintGoodStudents(students, kNumStudents);
+    return 0;
 }
 
-void addStudents(Student *a) {
-	string buf;
-	for (int i = 0; i < kStudents; i++) {
-		cout << i + 1 << ". Input the surname and initials (e.g., Ivanov I.I.): ";
-		getline(cin, a[i].full_name);
-
-	repeat_group:
-		cout << "Input the Group number of the student(e.g., 11): ";
-		getline(cin, buf);
-		if (isNumber(buf))
-			a[i].group_number = atoi(buf.c_str());
-		else {
-			cout << "Error: group number must be digits only!" << endl;
-			goto repeat_group;
-		}
-		cout << "Input his marks (5 marks [2..5]):" << endl;
-		for (int j = 0; j < kMarks; j++) {
-		repeat_mark:
-			cout << string(25, ' ') << "Mark " << j + 1 << " = ";
-			getline(cin, buf);
-			if (isNumber(buf))
-				a[i].marks[j] = atoi(buf.c_str());
-			else {
-				cout << "Error: marks must be digits only!" << endl;
-				goto repeat_mark;
-			}
-		}
-		cout << endl;
-	}
-	cout << endl;
+bool IsNumber(string number)
+{
+    for (size_t i = 0; i < number.length(); i++)
+        if (!isdigit(number[i]))
+            return 0;
+    return 1;
 }
 
-void sortStudents(Student *a) {
-	for (int i = 0; i < kStudents; i++) {
-		for (int j = 0; j < kStudents - i - 1; j++) {
-			if (a[j].group_number > a[j + 1].group_number) {
-				swap(a[j], a[j + 1]);
-			}
-		}
-	}
+void AddStudents(Student* students, const int kNumStudents)
+{
+    string buf;
+    for (int i = 0; i < kNumStudents; i++)
+    {
+        cout << i + 1 << ". Input the surname and initials (e.g., Ivanov I.I.): ";
+        getline(cin, students[i].full_name);
+
+        cout << "Input the group name of the student (e.g., IZ.11): ";
+        getline(cin, students[i].group_name);
+
+        cout << "Input his marks (5 marks [2..5]):\n";
+        for (int j = 0; j < kNumMarks; j++)
+        {
+        repeat_mark:
+            cout << string(25, ' ') << "Mark " << j + 1 << " = ";
+            getline(cin, buf);
+            if (!IsNumber(buf))
+            {
+                cout << "Error: marks must be digits only!\n";
+                goto repeat_mark;
+            }
+            students[i].marks[j] = stoi(buf);
+        }
+        cout << endl;
+    }
 }
 
-void printStudents(Student *a) {
-	for (int i = 0; i < kStudents; i++) {
-		cout << i + 1 << ". " << a[i].full_name << endl;
-	}
-	cout << endl;
+void SortStudents(Student* students, const int kNumStudents)
+{
+    for (int i = 0; i < kNumStudents - 1; i++)
+        for (int j = 0; j < kNumStudents - i - 1; j++)
+            if (students[j].group_name > students[j + 1].group_name)
+                swap(students[j], students[j + 1]);
 }
 
-void printHonours(Student *a) {
-	bool have_honours = false;
-	double average_mark;
-	const double kEps = 1e-15;
-
-	for (int i = 0; i < kStudents; i++)
-	{
-		average_mark = 0;
-		for (int j = 0; j < kMarks; j++)
-		{
-			average_mark += static_cast<double>(a[i].marks[j]);
-		}
-		average_mark = average_mark / 5;
-		if ((average_mark - 4.0) > kEps) {
-			have_honours = true;
-			cout << "|" << setw(4) << a[i].full_name << setw(4);
-			cout << "|" << setw(4) << a[i].group_number << setw(4);
-			cout << "|" << endl;
-		}
-	}
-
-	if (!have_honours) {
-		cout << "The average mark of all students is below 4";
-		cout << endl;
-	}
+double* ComputeAverageMarks(Student* students, const int kNumStudents)
+{
+    double* average_marks = new double[kNumStudents];
+    for (int i = 0; i < kNumStudents; i++)
+    {
+        average_marks[i] = 0;
+        for (int j = 0; j < kNumMarks; j++)
+            average_marks[i] += students[i].marks[j];
+        average_marks[i] /= kNumMarks;
+    }
+    return average_marks;
 }
 
-int main() {
-	Student stud_list[kStudents];
-	addStudents(stud_list);
-	sortStudents(stud_list);
-	printStudents(stud_list);
-	cout << "Students with high average mark: ";
-	cout << endl;
-	printHonours(stud_list);
-	return 0;
+void PrintStudents(Student* students, const int kNumStudents)
+{
+    double* average_marks = ComputeAverageMarks(students, kNumStudents);
+    for (int i = 0; i < kNumStudents; i++)
+    {
+        cout << "\nFull name: " << students[i].full_name;
+        cout << "\nGroup: " << students[i].group_name;
+        cout << "\nAverage mark: " << average_marks[i] << endl;
+    }
+    delete[] average_marks;
+}
+
+void PrintGoodStudents(Student* students, const int kNumStudents)
+{
+    double* average_marks = ComputeAverageMarks(students, kNumStudents);
+
+    bool students_found = false;
+    for (int i = 0; i < kNumStudents; i++)
+    {
+        if (average_marks[i] > 4)
+        {
+            students_found = true;
+            cout << "\nFull name: " << students[i].full_name;
+            cout << "\nGroup: " << students[i].group_name << endl;
+        }
+    }
+    if (!students_found)
+        cout << "No students were found.\n";
+
+    delete[] average_marks;
 }
